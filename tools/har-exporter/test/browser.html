@@ -1,0 +1,9 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>HAR Exporter 浏览器验收</title>
+<style>body{font:16px/1.6 system-ui;max-width:1000px;margin:30px auto;padding:20px}button{padding:10px 20px}li{margin:8px 0}.pass{color:#176530}.fail{color:#ac2020}iframe{width:360px;height:800px;border:1px solid #ddd}pre{white-space:pre-wrap}</style>
+<h1>HAR Exporter 浏览器验收</h1><p>真实浏览器 JavaScript、IndexedDB、文件写入、Blob 和界面；Chrome 扩展 API 在此页面中使用模拟对象。</p>
+<button id="run">运行原生浏览器测试</button><p id="summary" role="status">尚未运行</p><ol id="results"></ol>
+<h2>弹窗交互测试</h2><p>开始录制后可模拟导出失败和重试。所有数据均为合成测试数据。</p>
+<iframe title="扩展弹窗测试" src="/popup-test.html"></iframe>
+<iframe id="offscreen" title="Blob 测试" src="/offscreen-test.html" hidden></iframe>
+<script src="/payload-policy.js"></script><script src="/capture.js"></script><script src="/fs-store.js"></script><script src="/test/native-browser.js"></script>
+</html>

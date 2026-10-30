@@ -1,0 +1,7 @@
+body { width: 335px; margin: 16px; color: #253147; background: white; font: 13px/1.6 "Microsoft YaHei", sans-serif; }
+h1 { font-size: 19px; margin: 0 0 12px; } small { color: #667085; font-size: 12px; }
+label { display: block; margin: 10px 0; } button { width: 100%; margin: 5px 0; padding: 9px; border: 0; border-radius: 6px; background: #1769d2; color: white; cursor: pointer; font: inherit; }
+button:disabled { opacity: .5; cursor: default; } #stop { background: #c93737; } #discard { background: #eef0f4; color: #334155; }
+.note { color: #667085; font-size: 12px; } #result { white-space: pre-wrap; overflow-wrap: anywhere; } [hidden] { display: none !important; }
+
+#captureWarning { color: #9a4b00; background: #fff3db; padding: 8px; border-radius: 6px; }

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>HAR 保存位置</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+      font-size: 13px;
+      color: #333;
+      background: #fff;
+      padding: 20px 22px;
+      line-height: 1.6;
+    }
+    h2 { font-size: 15px; margin-bottom: 4px; }
+    .sub { color: #888; font-size: 12px; margin-bottom: 16px; }
+
+    h3 {
+      font-size: 12px;
+      color: #888;
+      font-weight: normal;
+      margin: 20px 0 8px;
+      padding-top: 14px;
+      border-top: 1px solid #eceff3;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      padding: 9px 14px;
+    }
+    .primary { background: #1a73e8; color: #fff; font-weight: bold; width: 100%; }
+    .primary:hover { background: #1765cc; }
+    .ghost {
+      background: #fff; color: #666; border: 1px solid #d5d9e0;
+      padding: 7px 12px; font-size: 12px;
+    }
+    .ghost:hover { background: #f5f7fa; }
+    .row { display: flex; gap: 8px; margin-top: 10px; }
+    .row .ghost { flex: 1; }
+
+    .picked {
+      background: #f1f8f4;
+      border: 1px solid #cfe6d8;
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-top: 14px;
+    }
+    .picked .name { font-weight: bold; word-break: break-all; }
+    .picked .path-note { color: #777; font-size: 11.5px; margin-top: 2px; }
+
+    .field { margin-top: 10px; }
+    .field label { display: block; font-size: 12px; color: #888; margin-bottom: 4px; }
+    .field input {
+      width: 100%;
+      padding: 7px 9px;
+      border: 1px solid #d5d9e0;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #333;
+    }
+    .field input:focus { outline: none; border-color: #1a73e8; }
+
+    ul { list-style: none; }
+    li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f2f4f7;
+    }
+    li:last-child { border-bottom: none; }
+    li .meta { flex: 1; min-width: 0; }
+    li .nm { word-break: break-all; }
+    li .sub2 { color: #999; font-size: 11px; }
+    li .acts { display: flex; gap: 6px; flex-shrink: 0; }
+    li button { padding: 4px 9px; font-size: 11.5px; }
+    li .use { background: #eaf2fe; color: #1a73e8; border: 1px solid #cfe0fb; }
+    li .use:hover { background: #d9e8fd; }
+    li .del { background: #fff; color: #999; border: 1px solid #e0e0e0; }
+    li .del:hover { color: #d93025; border-color: #f3c9c3; }
+    li.current .nm { font-weight: bold; color: #188038; }
+
+    .err {
+      color: #d93025;
+      background: #fdecea;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-top: 12px;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+    .ok {
+      color: #188038;
+      background: #eef7f0;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-top: 12px;
+      font-size: 12px;
+    }
+    .empty { color: #aaa; font-size: 12px; padding: 6px 0; }
+    .hidden { display: none; }
+
+    .foot { margin-top: 18px; text-align: right; }
+    .tip {
+      margin-top: 16px;
+      padding: 8px 10px;
+      background: #f5f7fa;
+      border-radius: 6px;
+      color: #888;
+      font-size: 11.5px;
+    }
+    .recent { background:#f5f7fa; border-radius:8px; padding:12px; margin:12px 0; }
+    #recentSummary { white-space:pre-line; overflow-wrap:anywhere; margin:8px 0; }
+    .actions { display:flex; flex-wrap:wrap; gap:8px; }
+    li .acts { flex-wrap:wrap; justify-content:flex-end; max-width:205px; }
+  </style>
+</head>
+<body>
+  <h2>HAR 保存位置</h2>
+  <section id="defaultPanel" class="recent hidden">
+    <b>默认保存目录</b>
+    <p id="defaultPath" style="margin:8px 0;user-select:all"></p>
+    <p id="defaultStatus" class="sub"></p>
+    <div class="actions">
+      <button id="btnDefaultPick" class="ghost">选择并授权默认目录…</button>
+      <button id="btnDefaultPathCopy" class="ghost">复制目录路径</button>
+      <button id="btnUseDefault" class="ghost" disabled>使用默认目录</button>
+    </div>
+    <p class="sub" style="margin:8px 0 0">首次选择时：在系统窗口按 Ctrl+L，粘贴上方路径，回车，再点“选择文件夹”。浏览器需要这次授权才能直接保存。</p>
+  </section>
+  <section class="recent">
+    <b>最近成功保存</b>
+    <p id="recentSummary"></p>
+    <div class="actions">
+      <button id="btnRecent" class="ghost" disabled>定位最近文件</button>
+      <button id="btnCopy" class="ghost" disabled>复制文件名</button>
+      <button id="btnClearRecent" class="ghost" disabled>清除这条记录</button>
+    </div>
+    <p class="sub" style="margin:8px 0 0">记忆目录通过系统文件选择窗口浏览；可查看地址栏，查看后取消即可。不会读取文件内容或改变保存位置。</p>
+  </section>
+  <div class="sub">选过的文件夹会被记住，下次在扩展弹窗里可直接选用。</div>
+
+  <button id="btnPick" class="primary">选择文件夹…</button>
+
+  <div id="pickedBox" class="picked hidden">
+    <div class="name" id="pickedName"></div>
+    <div class="path-note">浏览器不提供完整路径，建议填个备注名以便区分。</div>
+    <div class="field">
+      <label for="labelInput">备注名（可选）</label>
+      <input id="labelInput" type="text" maxlength="40" placeholder="例如：Air Cairo / Wizz Air / 老系统">
+    </div>
+    <label id="defaultConfirmWrap" class="hidden" style="margin-top:8px;font-size:12px">
+      <input id="defaultConfirm" type="checkbox"> <span id="defaultConfirmText"></span>
+    </label>
+    <div class="row">
+      <button id="btnSave" class="ghost">保存并记住</button>
+      <button id="btnRepick" class="ghost">重新选择</button>
+    </div>
+  </div>
+
+  <div id="msg" class="hidden"></div>
+
+  <h3>已记住的文件夹</h3>
+  <ul id="list"></ul>
+  <div id="empty" class="empty hidden">还没有记住任何文件夹。</div>
+
+  <div class="tip">
+    按航司分别建文件夹即可，导出时不会再弹另存为。<br>
+    点击「浏览」可查看对应目录中的 HAR；不会读取文件正文或删除文件。
+  </div>
+
+  <div class="foot">
+    <button id="btnClose" class="ghost">关闭</button>
+  </div>
+
+  <script src="export-config.js"></script>
+  <script src="fs-store.js"></script>
+  <script src="recent-export.js"></script>
+  <script src="picker.js"></script>
+</body>
+</html>

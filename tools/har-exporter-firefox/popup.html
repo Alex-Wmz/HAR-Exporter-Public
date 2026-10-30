@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>HAR Exporter — Firefox</title><link rel="stylesheet" href="popup.css"></head>
+<body>
+<h1>HAR Exporter <small>Firefox 1.4.5</small></h1>
+<p id="status" role="status">正在连接…</p>
+<p id="budgetStatus" class="note"></p>
+<p id="captureWarning" role="status" hidden></p>
+<label><input id="follow" type="checkbox">跟随录制页打开的新标签页</label>
+<label><input id="media" type="checkbox">包含图片、音视频和字体响应体</label>
+<button id="start" disabled>开始录制</button>
+<button id="stop" hidden>停止并导出 HAR</button>
+<button id="discard" hidden>放弃本次录制</button>
+<p id="result" role="status"></p>
+<p class="note">开始后刷新页面或执行操作；停止时最多等待 5 秒，随后打开另存为。单条响应体上限 10 MiB，累计正文预算 64 MiB，自动优先保留接口数据。出现缺失提示后建议保存并分段继续。</p>
+<p class="note">不采集 WebSocket 消息，不解析 SSE 消息。关闭浏览器或重载插件会丢失未导出的数据。HAR 可能含登录凭据，分享前请脱敏。</p>
+<script src="payload-policy.js"></script>
+  <script src="popup.js"></script>
+</body></html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>HAR 资源</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #252a31; background: #fff; font: 13px/1.5 system-ui, "Microsoft YaHei", sans-serif; letter-spacing: 0; }
+    main { max-width: 1280px; margin: 0 auto; padding: 20px 24px; }
+    header { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; border-bottom: 1px solid #dfe3e8; padding-bottom: 16px; }
+    header img { width: 32px; height: 32px; }
+    h1 { margin: 0; font-size: 18px; font-weight: 650; }
+    #version, .muted { color: #68717c; }
+    #phase { margin-left: auto; color: #15734d; }
+    .filters { display: grid; grid-template-columns: minmax(180px, 2fr) minmax(110px, 1fr) 110px 110px; gap: 12px; padding: 16px 0 12px; }
+    label { display: flex; flex-direction: column; gap: 5px; color: #555f6a; font-size: 12px; min-width: 0; }
+    input, select, button { font: inherit; letter-spacing: 0; }
+    input[type="search"], input[type="number"], select { min-width: 0; width: 100%; height: 34px; padding: 6px 9px; color: #252a31; background: #fff; border: 1px solid #cbd2da; border-radius: 4px; }
+    input:focus, select:focus, button:focus-visible { outline: 2px solid #2878bd; outline-offset: 2px; }
+    .options, .actions, .footer { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .options { padding-bottom: 14px; }
+    .check { display: inline-flex; flex-direction: row; align-items: center; gap: 6px; font-size: 13px; color: #37424c; }
+    input[type="checkbox"] { width: 16px; height: 16px; margin: 0; accent-color: #176caa; flex: 0 0 16px; }
+    .actions { min-height: 49px; padding: 9px 0; border-top: 1px solid #e2e6eb; }
+    button { min-height: 32px; padding: 5px 11px; border: 1px solid #cbd2da; border-radius: 4px; background: #fff; color: #253240; cursor: pointer; }
+    button:hover:not(:disabled) { background: #f2f6fa; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    button.primary { background: #176caa; color: #fff; border-color: #176caa; }
+    button.primary:hover:not(:disabled) { background: #11588e; }
+    button.icon { width: 34px; padding: 3px; font-size: 20px; line-height: 1; }
+    #summary { margin-left: auto; color: #59636f; }
+    #notice { color: #8a550a; margin: 8px 0; }
+    #result { min-height: 22px; margin: 8px 0; overflow-wrap: anywhere; }
+    #result.error { color: #b32828; }
+    .table-wrap { overflow-x: auto; border-top: 1px solid #d7dde4; border-bottom: 1px solid #d7dde4; }
+    table { width: 100%; min-width: 740px; border-collapse: collapse; table-layout: fixed; text-align: left; }
+    th { padding: 10px 8px; background: #f3f5f7; color: #52606c; font-size: 12px; font-weight: 600; }
+    td { padding: 10px 8px; border-top: 1px solid #e7ebef; vertical-align: middle; }
+    th:first-child, td:first-child { width: 40px; text-align: center; }
+    th.type { width: 86px; } th.source { width: 110px; } th.size { width: 92px; } th.body { width: 180px; }
+    .name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 550; }
+    .url { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #68717c; font-size: 12px; margin-top: 3px; }
+    .status-yes { color: #13724e; }
+    .status-no { color: #7b5a30; }
+    .detail { display: block; color: #747e89; font-size: 11px; overflow-wrap: anywhere; }
+    #empty { margin: 0; padding: 40px 16px; text-align: center; color: #68717c; }
+    .footer { padding-top: 14px; }
+    .footer .pager { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    [hidden] { display: none !important; }
+    @media (max-width: 700px) { main { padding: 16px 12px; } .filters { grid-template-columns: 1fr 1fr; gap: 10px; } #summary { margin-left: 0; width: 100%; } .actions { gap: 8px; } #phase { width: 100%; margin-left: 42px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header><img src="icons/icon48.png" alt=""><h1>HAR 资源</h1><span id="version"></span><span id="phase" role="status"></span></header>
+    <form id="filters" class="filters">
+      <label>搜索<input id="query" type="search" maxlength="200" placeholder="名称、地址或 MIME" autocomplete="off"></label>
+      <label>类型<select id="kind"><option value="">全部</option><option value="image">图片</option><option value="audio">音频</option><option value="video">视频</option><option value="document">文档</option><option value="playlist">播放清单</option><option value="segment">媒体片段</option></select></label>
+      <label>最小 (KiB)<input id="minSize" type="number" min="0" step="any" inputmode="decimal"></label>
+      <label>最大 (KiB)<input id="maxSize" type="number" min="0" step="any" inputmode="decimal"></label>
+    </form>
+    <div class="options">
+      <label class="check"><input id="availableOnly" type="checkbox">仅可导出正文</label>
+      <label class="check" title="只折叠同来源、同跳号、同状态下相同地址和相同已捕获正文；不会删除原 HAR 条目"><input id="collapse" type="checkbox" checked>折叠重复地址</label>
+    </div>
+    <div class="actions">
+      <button id="refresh" class="icon" type="button" title="刷新资源" aria-label="刷新资源">↻</button>
+      <button id="exportBodies" class="primary" type="button" disabled>导出所选正文</button>
+      <button id="exportManifest" type="button" disabled>保存筛选清单</button>
+      <span class="muted">逐文件另存为</span><span id="summary"></span>
+    </div>
+    <p id="notice" role="status" hidden></p><p id="result" role="status"></p>
+    <div class="table-wrap">
+      <table aria-label="已捕获资源"><thead><tr>
+        <th><input id="selectPage" type="checkbox" aria-label="选择当前页可导出资源"></th><th>资源</th><th class="type">类型</th><th class="source">来源</th><th class="size">大小</th><th class="body">正文</th>
+      </tr></thead><tbody id="rows"></tbody></table>
+      <p id="empty">当前没有已捕获资源</p>
+    </div>
+    <div class="footer"><span id="selection" class="muted"></span><div class="pager"><button id="previous" class="icon" title="上一页" aria-label="上一页">‹</button><span id="page"></span><button id="next" class="icon" title="下一页" aria-label="下一页">›</button></div></div>
+  </main>
+  <script src="resources.js"></script><script src="resource-export.js"></script><script src="resources-page.js"></script>
+</body>
+</html>

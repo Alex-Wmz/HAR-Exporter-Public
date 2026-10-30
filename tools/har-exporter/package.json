@@ -1,0 +1,16 @@
+{
+  "name": "har-exporter",
+  "version": "1.5.1",
+  "private": true,
+  "description": "零运行依赖的 HAR 网络录制扩展；含录制生命周期、协议乱序、文件保存与对抗性回归测试。",
+  "type": "commonjs",
+  "scripts": {
+    "check:syntax": "node scripts/check-syntax.mjs",
+    "test": "node --test test/*.test.mjs",
+    "check": "node scripts/verify.mjs"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0"
+}

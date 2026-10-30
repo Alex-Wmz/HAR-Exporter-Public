@@ -1,0 +1,14 @@
+/artifacts/
+/packages/
+/dist/
+/.venv/
+/node_modules/
+__pycache__/
+*.pyc
+*.pdb
+*.har
+*.log
+*.private.*
+.env
+settings.json
+inventory*.json

@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "HAR Exporter (带响应体)",
+  "version": "1.5.1",
+  "minimum_chrome_version": "125",
+  "description": "录制页面网络请求及可获取的响应体，导出 HAR；筛选已捕获资源并本地另存为。支持多标签页、子框架和保存失败后重试。",
+  "permissions": [
+    "debugger",
+    "downloads",
+    "activeTab",
+    "offscreen",
+    "storage",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "HAR Exporter",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

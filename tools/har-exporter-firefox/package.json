@@ -1,0 +1,13 @@
+{
+  "name": "har-exporter-firefox",
+  "version": "1.4.5",
+  "private": true,
+  "scripts": {
+    "check": "node scripts/verify.mjs",
+    "test": "node --test test/*.test.cjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0"
+}

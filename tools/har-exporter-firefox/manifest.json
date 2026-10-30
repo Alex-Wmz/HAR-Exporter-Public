@@ -1,0 +1,46 @@
+{
+  "manifest_version": 2,
+  "name": "HAR Exporter (Firefox，带响应体)",
+  "version": "1.4.5",
+  "description": "手动录制当前页面及其打开的标签页的网络请求和可获取响应体，在本机导出 HAR。",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "har-exporter@local.invalid",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "downloads",
+    "storage",
+    "webNavigation",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": [
+      "payload-policy.js",
+      "recorder.js",
+      "background.js"
+    ],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "HAR Exporter — Firefox",
+    "default_icon": "icons/icon48.png"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_security_policy": "script-src 'self'; object-src 'self'"
+}

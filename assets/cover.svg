@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="340" viewBox="0 0 1280 340" role="img" aria-labelledby="t d">
+<title id="t">HAR Exporter</title><desc id="d">把一次网页操作，留成可检查的记录。。功能示意，不是实机截图。</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0b1220"/><stop offset="1" stop-color="#16273d"/></linearGradient><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#b8cbe0" stroke-opacity=".05"/></pattern></defs>
+<rect width="1280" height="340" rx="22" fill="url(#bg)"/><rect width="1280" height="340" rx="22" fill="url(#grid)"/>
+<path d="M0 2H1280" stroke="#91b8ff" stroke-width="4"/><text x="64" y="72" fill="#91b8ff" font-family="Arial,sans-serif" font-size="17" letter-spacing="4">TOOLS / BUILD / VERIFY</text>
+<text x="64" y="150" fill="#f3f7fd" font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="52" font-weight="700">HAR Exporter</text>
+<text x="66" y="207" fill="#bbcadb" font-family="Segoe UI,Microsoft YaHei,sans-serif" font-size="25">把一次网页操作，留成可检查的记录。</text>
+<rect x="64" y="251" width="324" height="36" rx="18" fill="#91b8ff" fill-opacity=".12"/><text x="83" y="275" fill="#91b8ff" font-family="Microsoft YaHei,sans-serif" font-size="16">源码可见 · 非商业许可 · 预发布</text>
+<g transform="translate(905 65)" stroke="#91b8ff" fill="none" stroke-width="3"><rect width="285" height="205" rx="17" stroke-opacity=".45"/><path d="M0 38H285" stroke-opacity=".3"/><circle cx="19" cy="19" r="3" fill="#91b8ff"/><circle cx="34" cy="19" r="3" fill="#91b8ff" fill-opacity=".5"/>
+<rect x="24" y="63" width="61" height="30" rx="8"/><rect x="111" y="63" width="61" height="30" rx="8"/><rect x="199" y="63" width="61" height="30" rx="8"/><path d="M85 78H111M172 78H199M25 125H258M25 154H224M25 181H179" stroke-opacity=".45"/>
+</g></svg>

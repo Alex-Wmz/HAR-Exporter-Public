@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 330px;
+      font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+      font-size: 13px;
+      color: #333;
+      padding: 14px;
+    }
+    h1 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: #ccc; display: inline-block;
+    }
+    .dot.rec {
+      background: #e74c3c;
+      animation: pulse 1.2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .status { margin: 8px 0 12px; color: #666; line-height: 1.6; }
+    .count { font-weight: bold; color: #e74c3c; }
+
+    .field { margin-bottom: 4px; }
+    .field label {
+      display: block;
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 4px;
+    }
+    select {
+      width: 100%;
+      padding: 7px 8px;
+      border: 1px solid #d5d9e0;
+      border-radius: 6px;
+      background: #fff;
+      color: #333;
+      font-size: 12.5px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    select:focus { outline: none; border-color: #1a73e8; }
+    .subrow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 5px;
+      margin-bottom: 12px;
+      min-height: 15px;
+    }
+    .hint { font-size: 11.5px; color: #999; line-height: 1.4; }
+    .linkbtn {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 11.5px;
+      font-family: inherit;
+      color: #1a73e8;
+      cursor: pointer;
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+    .linkbtn:hover { color: #d93025; }
+    .linkbtn.warn { color: #999; }
+    .linkbtn.warn:hover { color: #d93025; }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    #btnStart { background: #1a73e8; color: #fff; }
+    #btnStop { background: #e74c3c; color: #fff; }
+    #btnCancel {
+      background: #fff; color: #666;
+      border: 1px solid #ddd; font-weight: normal; font-size: 12px;
+      padding: 7px;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .tip {
+      margin-top: 12px;
+      padding: 8px 10px;
+      background: #f5f7fa;
+      border-radius: 6px;
+      color: #888;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .hidden { display: none; }
+    .error { color: #e74c3c; margin: 6px 0; font-size: 12px; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; }
+
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #666;
+      cursor: pointer;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+    .check input { cursor: pointer; margin: 0; }
+    .check .q {
+      color: #aaa;
+      text-decoration: none;
+      border-bottom: 1px dotted #ccc;
+    }
+    .ok { color: #188038; margin: 6px 0; font-size: 12px; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <h1><span id="dot" class="dot"></span> HAR Exporter</h1>
+
+  <div class="status" id="statusIdle">
+    当前未录制。点击「开始录制」后，请在页面上刷新或执行操作（如查询、翻页），再回来停止并导出。
+  </div>
+
+  <div class="status hidden" id="statusRec">
+    <span id="statusLabel">录制中…</span> 已捕获 <span class="count" id="count">0</span> 条请求<br>
+    <span id="tabsLine" class="hidden">正在录制 <b id="tabsCount">1</b> 个标签页</span>
+    <span id="tabsHint">请现在去页面上操作，完成后回到这里停止。</span>
+  </div>
+
+  <p id="budgetStatus" class="hint"></p>
+  <p id="captureWarning" class="error hidden" role="status"></p>
+
+  <label class="check" id="followWrap" title="开启后，由正在录制的标签页打开的新标签页（链接跳转、支付弹窗、3DS 等）会自动一并录制，请求并入同一份 HAR。你自己手动新建的标签页不会被录。">
+    <input type="checkbox" id="chkFollow">
+    <span>跟随新标签页（跳转/弹窗）</span>
+  </label>
+
+  <label class="check"><input type="checkbox" id="chkMedia"><span>同时保存图片、音视频和字体响应体</span></label>
+
+  <div class="field">
+    <label for="folderSelect">导出到</label>
+    <select id="folderSelect"></select>
+  </div>
+  <div class="subrow">
+    <span class="hint" id="folderHint"></span>
+    <button id="btnForget" class="linkbtn warn hidden" type="button">从列表移除</button>
+  </div>
+  <button id="btnDefaultFolder" class="linkbtn hidden" type="button">设置默认目录…</button>
+
+  <div class="error hidden" id="err"></div>
+  <div class="ok hidden" id="ok"></div>
+
+  <button id="btnStart">● 开始录制</button>
+  <button id="btnStop" class="hidden">■ 停止并导出 HAR</button>
+  <button id="btnCancel" class="hidden">放弃本次录制（不导出）</button>
+  <button id="btnResources" type="button" style="background:#eef5ff;color:#185abc;font-size:12px">查看已捕获资源</button>
+
+  <div class="tip">
+    <b>最近成功保存</b>
+    <p id="recentSummary" style="white-space:pre-line;overflow-wrap:anywhere;margin:6px 0"></p>
+    <button id="btnLocate" class="linkbtn" type="button">查看保存位置 / 浏览文件夹…</button>
+  </div>
+
+  <div class="tip">
+    录制网络数据及可获取的响应体，非操作视频。单条响应体最多 10 MiB；累计正文最多 64 MiB，自动优先保留接口数据。出现缺失提示后建议保存并分段继续。<br>
+    HAR 中可能含登录凭证，请勿提交到 Git。
+  </div>
+
+  <script src="export-config.js"></script>
+  <script src="fs-store.js"></script>
+  <script src="payload-policy.js"></script>
+  <script src="recent-export.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
